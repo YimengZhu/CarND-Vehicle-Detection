@@ -17,7 +17,7 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.png
-[image3]: ./examples/sliding_windows.jpg
+[image3]: ./examples/sliding_windows.png
 [image4]: ./examples/sliding_window.png
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
@@ -79,7 +79,7 @@ clf.fit(X_train, y_train)
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search window positions with fixed overlap rate in both horizonal and vertical direction. I choosed 3 different scales (96 x 96, 128 x 128, 160 x 160) for the windows to capture cars with different size in the image. Because there can never be cars in the sky, so I just search the lower half area of the image to make the algorithm faster. The windows in the image looks like this:
+I decided to search window positions with fixed overlap rate in both horizonal and vertical direction. I choosed 3 different scales (64 x 64, 96 x 96, 128 x 128) for the windows to capture cars with different size in the image. Because there can never be cars in the sky, so I just search the lower half area of the image to make the algorithm faster. The windows in the image looks like this:
 ![alt text][image3]
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
