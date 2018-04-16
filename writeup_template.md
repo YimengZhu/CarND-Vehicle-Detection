@@ -18,7 +18,7 @@ The goals / steps of this project are the following:
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.png
 [image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
+[image4]: ./examples/sliding_window.png
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
@@ -46,7 +46,7 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `Gray scale` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example of HOG features in 3 channels using the `LUV` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
 ![alt text][image2]
@@ -64,15 +64,16 @@ hog_channel=0
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a SVM using the code in the 4th code cell in Jupyter notebook. I used the svm model from sklearn package and the grid_search function to automated determine the best hyperparameter. The code for the model training and hyper parameter tuning is the in the code below:
+I trained a SVM using the code in the 4th and 11th code cell in Jupyter notebook. Firstly I used only HOG features to train the SVM and got the accuracy of 0.9913 on the test data. Then I appended the binned color feature and histogramm of color to HOG feature to train a SVM. After that I got a SVM with 0.9947 accuracy on test set.
+
+The svm model I used comes from sklearn package and the grid_search function helps to determine the best hyperparameter automatically. The code for the model training and hyper parameter tuning is the in the code below:
 ```python
 from sklearn import svm, grid_search
 parameters = {'kernel':('linear', 'rbf'), 'C':[1, 10]}
 svr = svm.SVC()
-clf_hog = grid_search.GridSearchCV(svr, parameters)
-clf_hog.fit(X_train_hog, y_train_hog)
+clf = grid_search.GridSearchCV(svr, parameters)
+clf.fit(X_train, y_train)
 ```
-With the code above I got a SVM with a test set accuracy of 0.9927.
 
 ### Sliding Window Search
 
@@ -120,7 +121,4 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 In this project I used the sliding windows to locate a lot of potential aeras in the video frames, where a car might exsist. In every window the image would be tested by a SVM if there was a car. The SVM was trained with the data provided by Udacity and the hyper parameter was tuned automated by grid search method in sklearn package. 
 
-I discovered some problems when I was processing the video. There might be some false positives on the road, where the hog features was similar to a vehcile. This might lead the pipline likely fail if there are too many tiles in the image with the same property.
-
-I would used tune the slide window scale and overlap rate with a precise threshold to avoid this problem. With that the false positives can be filtered out effectively and make the pipline robuster.
-
+A very obvious problem about this pipline is there are a lot of false positive prediction offered from SVM. I think this might be relevent to the hog features extraction from the trainig data. I would like to try some other machine learning model to make the prediction more accurate. Such like deep neural network (like YOLO strategie) might help on this problem.
